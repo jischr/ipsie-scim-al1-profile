@@ -13,20 +13,20 @@ stream = "IETF"
 status = "informational"
 
 [[author]]
-initials = "M."
-surname = "Maguire"
-fullname = "Mark Maguire"
-organization = "Aujas Cybersecurity"
-  [author.address]
-  email = "mark.maguire@aujas.com"
-
-[[author]]
 initials = "J."
 surname = "Schreiber"
 fullname = "Jen Schreiber"
 organization = "SGNL"
   [author.address]
   email = "jen@sgnl.ai"
+
+[[author]]
+initials = "M."
+surname = "Maguire"
+fullname = "Mark Maguire"
+organization = "Aujas Cybersecurity"
+  [author.address]
+  email = "mark.maguire@aujas.com"
 
 %%%
 
