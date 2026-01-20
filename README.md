@@ -1,12 +1,12 @@
-# IPSIE AL1 SCIM 2.0 Profile
+# SCIM IPSIE Profiles
 
 This is the working area for the IETF Internet-Draft, "IPSIE AL1 SCIM 2.0 Profile".
 
-* [Editor's Copy](https://jischr.github.io/ipsie-scim-al1-profile/draft-schreiber-ipsie-scim-al1-profile.html)
+* [Editor's Copy](https://jischr.github.io/scim-ipsie-profiles/draft-schreiber-ipsie-scim-al1-profile.html)
 
 ## Abstract
 
-This document defines a profile for SCIM 2.0 to meet the security and interoperability requirements for identity lifecycle management within enterprises. Within the context of SCIM, The profile establishes requirements for provisioning, account management, client authentication, and identity synchronization.
+This document defines profiles for SCIM 2.0 to meet the security and interoperability requirements for identity lifecycle management within enterprises. Within the context of SCIM, the profiles establish requirements for provisioning, account management, client authentication, and identity synchronization.
 
 ## Contributing
 
