@@ -1,0 +1,472 @@
+
+
+
+
+IPSIE                                                       J. Schreiber
+Internet-Draft                                                      SGNL
+Intended status: Informational                                M. Maguire
+Expires: 24 July 2026                                Aujas Cybersecurity
+                                                         20 January 2026
+
+
+                       IPSIE AL1 SCIM 2.0 Profile
+             draft-schreiber-ipsie-scim-al1-profile-latest
+
+Abstract
+
+   This document defines a profile for SCIM 2.0 to meet the security and
+   interoperability requirements for identity lifecycle management
+   within enterprises.  Within the context of SCIM, The profile
+   establishes requirements for provisioning, account management, client
+   authentication, and identity synchronization.
+
+Status of This Memo
+
+   This Internet-Draft is submitted in full conformance with the
+   provisions of BCP 78 and BCP 79.
+
+   Internet-Drafts are working documents of the Internet Engineering
+   Task Force (IETF).  Note that other groups may also distribute
+   working documents as Internet-Drafts.  The list of current Internet-
+   Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+   Internet-Drafts are draft documents valid for a maximum of six months
+   and may be updated, replaced, or obsoleted by other documents at any
+   time.  It is inappropriate to use Internet-Drafts as reference
+   material or to cite them other than as "work in progress."
+
+   This Internet-Draft will expire on 24 July 2026.
+
+Copyright Notice
+
+   Copyright (c) 2026 IETF Trust and the persons identified as the
+   document authors.  All rights reserved.
+
+   This document is subject to BCP 78 and the IETF Trust's Legal
+   Provisions Relating to IETF Documents (https://trustee.ietf.org/
+   license-info) in effect on the date of publication of this document.
+   Please review these documents carefully, as they describe your rights
+   and restrictions with respect to this document.  Code Components
+   extracted from this document must include Revised BSD License text as
+   described in Section 4.e of the Trust Legal Provisions and are
+   provided without warranty as described in the Revised BSD License.
+
+Table of Contents
+
+   1.  Discussion Venues
+   2.  Introduction
+   3.  Conventions and Definitions
+     3.1.  Terminology
+   4.  Profile
+     4.1.  Authentication and Authorization
+     4.2.  SCIM Interoperability Requirements
+       4.2.1.  General Requirements
+       4.2.2.  User Provisioning Operations
+       4.2.3.  Group (Role) Provisioning Operations
+     4.3.  Metadata Endpoints
+       4.3.1.  ResourceTypes
+       4.3.2.  ServiceProviderConfig
+       4.3.3.  Schemas
+   5.  Security Considerations
+   6.  IANA Considerations
+   7.  Compliance Statement
+   8.  Normative References
+   Authors' Addresses
+
+1.  Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/jischr/ipsie-scim-al1-profile
+   (https://github.com/jischr/ipsie-scim-al1-profile).
+
+2.  Introduction
+
+   This document defines the IPSIE Account Lifecycle 1 (AL1) Profile for
+   SCIM 2.0.  It provides a clear reference for SCIM deployments that
+   require a well-defined security baseline meeting best practices for
+   interoperable enterprise identity management.
+
+   The profile addresses critical aspects of secure identity management,
+   with particular emphasis on:
+
+   *  Client authentication
+   *  Retrieve, add, and modify Users.
+   *  Retrieve, add, and modify Groups.
+   *  Synchronization of data from the Identity Service to the
+      Application
+
+   By adhering to this profile, organizations can implement SCIM-based
+   integrations that meet stringent security requirements while ensuring
+   interoperability across different implementations.
+
+3.  Conventions and Definitions
+
+   The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in BCP
+   14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
+
+3.1.  Terminology
+
+   SCIM
+
+   |  The System for Cross-domain Identity Management as defined in
+   |  [RFC7643] and [RFC7644]
+
+   SCIM Client
+
+   |  An application that uses the SCIM protocol to manage identity data
+   |  maintained by the service provider.  The client initiates SCIM
+   |  HTTP requests to a target service provider.
+
+   SCIM Service Provider
+
+   |  An HTTP web application that provides identity information via the
+   |  SCIM protocol.
+
+   Role
+
+   |  TBD
+
+   Identity Service
+
+   |  Acts as the SCIM client, initiating all provisioning operations.
+
+   Application
+
+   |  Acts as the SCIM service provider, hosting SCIM endpoints and
+   |  processing all provisioning requests.
+
+   Note: When SCIM is applied to the context of IPISIE, the Identity
+   Service acts as the SCIM client and the Application acts as the SCIM
+   service provider.  The document will use the Role terms below for
+   consistency between across IPSIE Profiles.
+
+4.  Profile
+
+4.1.  Authentication and Authorization
+
+   The Identity Service and Application MUST use OAuth 2.0 [RFC6749] for
+   authentication and authorization of SCIM protocol.
+
+   |  *Editor's Note:* This section should be expanded and may need to
+   |  reference the IPSIE Security Level 1 (SL1) profile.
+
+   The following requirements ensure consistent and secure handling of
+   access tokens and authorization server configuration:
+
+   *  OAuth 2.0 interactions MUST comply with JWT Client Authentication
+      as defined in [RFC7523]
+   *  The token SHALL exchange a signed JWT for an access token and
+      present that token in the {Authorization: Bearer} header on all
+      subsequent SCIM requests.
+   *  The token MUST contain a "token_endpoint" value which is the URL
+      of the Identity Service's OAuth 2.0 token endpoint.
+   *  The Acess Token MUST include the "scim" scope and not grant
+      broader permissions.
+   *  All Authorization Server parameters SHOULD be discovered from
+      OAuth Authorization Server metadata as defined in [RFC8414].
+   *  The Identity Service SHOULD expose a jwks_uri to allow the
+      Application to perform signature verification
+
+4.2.  SCIM Interoperability Requirements
+
+4.2.1.  General Requirements
+
+   *  The Identity Service SHALL implement the required functionality of
+      a SCIM client as defined in [RFC7643] and [RFC7644].
+   *  The Application SHALL implement the required functionality of a
+      SCIM service provider as defined in [RFC7643] and [RFC7644].
+   *  All SCIM operations SHALL be authenticated and authorized via
+      OAuth 2.0 as specified in Section 4.1.
+   *  Local modifications to Users or Groups in the Application are
+      prohibited.
+
+4.2.2.  User Provisioning Operations
+
+   The Application MUST provide support all User provisioning operations
+   defined in this section.
+
+4.2.2.1.  Create User (POST /Users)
+
+   User creation is performed by the SCIM operation POST /Users.
+
+   In addition to the user attributes required by [RFC7643], the
+   following attributes are required to be part of the User schema:
+
+   |  *Editor's Note:* Should specify exact attribute names (e.g.,
+   |  "email" vs "emails") rather than keeping this vague.
+
+   *  An attribute which contains a unique identifier used by the
+      enterprise to distinguish the owner of the account, such as
+      "externalId."
+   *  An attribute which contains the primary email address of the user,
+      such as "email"
+
+4.2.2.2.  Update User (PATCH /Users/{id})
+
+   User updates are performed by the SCIM operation PATCH /Users/{id}
+
+4.2.2.3.  Deactivate or Reactivate User (PATCH /Users/{id})
+
+   Changes to the user activation status, such deactivation and
+   reactivation, are performed by the SCIM operation PATCH /Users/{id}
+
+   The Identity Service SHOULD propagate user deactivation events to the
+   Application within 5 minutes of the user being deactivated.
+
+   The Application SHOULD respond to user deactivation events by
+   revoking the ability for the user to continue accessing the
+   Application, including the revocation of currently active sessions.
+   The revocation mechanism outside the scope of this profile.
+   Revocation SHOULD occur within 5 minutes of receiving the
+   deactivation request.
+
+   When a user account is deactivated, all access mechanisms and
+   authorizations associated with that account MUST also be deactivated.
+   This includes, but is not limited to:
+
+   *  Web sessions
+   *  API tokens
+   *  Refresh tokens
+   *  Personal access tokens
+   *  SSH keys associated with the user
+   *  Device-based authentication credentials
+
+   The Application MUST allow reactivation of a deactivated user.
+
+4.2.2.4.  Delete User (DELETE /Users/{id})
+
+   User deletions are performed by the SCIM operation DELETE /Users/{id}
+
+   After a user is deleted, the Application MUST allow the creation of a
+   new user with the same username.
+
+   |  *Editor's Note:* Need to clarify implications for maintaining user
+   |  data and avoiding conflicts when recreating users with the same
+   |  username.
+
+4.2.2.5.  Get All Users (GET /Users)
+
+   Get all users in the system is performed by the SCIM operation GET
+   /Users
+
+   This endpoint ensures that all users are managed by the Identity
+   Service.
+
+   To ensure that large amounts of data can be read from the
+   Application, the application must support with index-based or cursor-
+   based pagination for the GET /Users request.  To ensure system
+   stability and prevent abuse, the Application SHALL enforce rate
+   limits on this endpoint and must respond with appropriate headers,
+   such as "429 Too Many Requests" and "Retry-After," when limits are
+   exceeded.
+
+4.2.2.6.  Get User By ID (GET /Users/{id})
+
+   User searches by id are performed by the SCIM operation GET
+   /Users/{id}
+
+4.2.2.7.  List Users By Alternate Identifier (GET /Users?)
+
+   User searches by alternate identifier are performed via the SCIM
+   operation: GET /Users?filter={filterExpression}
+
+   Application Providers MUST support the following filter expressions:
+
+   *  username eq {username}
+   *  externalId eq {externalId}
+   *  emails[value eq {email}]
+
+4.2.3.  Group (Role) Provisioning Operations
+
+   The Application MUST provide support all Group provisioning
+   operations defined in this section.
+
+   *Note*: Within the IPSIE standard, Application permissions are
+   referred to as "Roles."  Within SCIM, Application permissions are
+   referred to as "Groups."  The term "Role" in IPSIE is functionally
+   equivalent to the term "Group" in SCIM.
+
+4.2.3.1.  Create Group (POST /Groups)
+
+   Group creation is performed by the SCIM operation POST /Group.
+
+   |  *Editor's Note:* This section needs additional details about
+   |  required Group attributes and schema requirements.
+
+4.2.3.2.  Get All Groups (GET /Groups)
+
+   A search for all groups in the system is performed by the SCIM
+   operation GET /Groups
+
+   This endpoint ensures that all groups are managed by the Identity
+   Service.
+
+   To ensure that large amounts of data can be read from the
+   Application, the application MUST support with index-based or cursor-
+   based pagination for the GET /Groups request.  To ensure system
+   stability and prevent abuse, the Application SHALL enforce rate
+   limits on this endpoint and MUST respond with appropriate headers,
+   such as "429 Too Many Requests" and "Retry-After," when limits are
+   exceeded.
+
+4.2.3.3.  Get Group By ID (GET /Group/{id})
+
+   Group searches by id are performed by the SCIM operation GET
+   /Group/{id}?excludedAttributes=members
+
+4.2.3.4.  List Groups By Alternate Identifier (GET /Groups?)
+
+   User lookups by alternate identifier are performed by the SCIM
+   operation GET
+   /Groups?filter={filterExpression}&excludedAttributes=members
+
+   Application Providers MUST support the following filter expressions:
+   TBD
+
+4.2.3.5.  Add or Remove Group Members (PATCH /Group/{id})
+
+   Members are added or removed from Groups via the SCIM operation PATCH
+   /Groups/{id}
+
+   For each Operation in the PATCH:
+
+   The op attribute MUST contain either "add" or "remove".
+
+   *  When the op is "add":
+
+      -  The path attribute MUST be "members".
+      -  The value attribute MUST be an array of Group member elements,
+         as defined in Section 4.2 of the SCIM Core Schema [RFC7643].
+         Each member MUST contain a value subattribute with the id of
+         the resource being added to the group.
+
+   *  When the op is "remove":
+
+      -  The path attribute MUST be either:
+         o  "members" (to remove all members)
+         o  "members[value eq {id}]" (to remove a single member)
+      -  The value attribute MUST be unspecified.
+
+4.3.  Metadata Endpoints
+
+4.3.1.  ResourceTypes
+
+   Application MUST host a /ResourceTypes endpoint, as defined in
+   Section 4 of [RFC7644].
+
+   The supported ResourceTypes MUST include Users and Groups.
+
+4.3.2.  ServiceProviderConfig
+
+   Application Providers MUST host a /ServiceProviderConfig endpoint to
+   describe the operations they support, as defined in Section 4 of
+   [RFC7644]
+
+   The operations MUST include, at minimum, the set of SCIM capabilities
+   required for compatibility with this IPSIE profile.
+
+4.3.3.  Schemas
+
+   Application Providers MUST host a /Schemas endpoint to describe the
+   supported schemas, as defined in Section 4 of [RFC7644].  There must
+   be a schema for both Users and Groups.  The schemas must include all
+   required attributes from RFC 7643 and from Section 3.2.3 (Create
+   User).
+
+5.  Security Considerations
+
+   For SCIM security considerations, see [RFC7643] and [RFC7644]
+
+   Additionally, the following requierements are included to address
+   security considerations.
+
+   *  *Transport Security*: All endpoints SHALL enforce TLS 1.2 or later
+      with strong cipher suites and certificate validation.
+   *  *Error Handling*: Error responses SHALL use the SCIM error format
+      and SHALL NOT leak internal details.
+   *  *Replay Resistance*: Access tokens SHALL expire and nonces SHALL
+      be validated to prevent replay.
+   *  *Auditing*: All provisioning actions and responses SHALL be logged
+      for audit and troubleshooting.
+   *  *Rate Limiting*: All endpoints SHALL enforce rate limiting and
+      must respond with "429 Too Many Requests" when limits are
+      exceeded.
+
+6.  IANA Considerations
+
+   This document has no IANA actions.
+
+7.  Compliance Statement
+
+   Implementation of all mandatory requirements in this profile will
+   result in a SCIM 2.0 deployment that satisfies IPSIE Identity
+   Lifecycle Level 1 (IL1).  Specifically:
+
+   *  *Identity Service (SCIM client)*
+
+      -  SHALL initiate all CRUD operations for Users and Groups.
+      -  SHALL adhere to the security considerations above.
+
+   *  *Application (SCIM service provider)*
+
+      -  SHALL host all SCIM endpoints with full support for User and
+         Group provisioning.
+      -  SHALL prevent local modifications outside of SCIM.
+      -  SHALL enforce OAuth 2.0 JWT Profile for Authentication
+         [RFC7523].
+      -  SHALL adhere to the security considerations above.
+
+   By conforming to this profile, implementations will achieve a
+   consistent, secure, and interoperable baseline for enterprise
+   identity lifecycle management.
+
+8.  Normative References
+
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/info/rfc2119>.
+
+   [RFC6749]  Hardt, D., Ed., "The OAuth 2.0 Authorization Framework",
+              RFC 6749, DOI 10.17487/RFC6749, October 2012,
+              <https://www.rfc-editor.org/info/rfc6749>.
+
+   [RFC7523]  Jones, M., Campbell, B., and C. Mortimore, "JSON Web Token
+              (JWT) Profile for OAuth 2.0 Client Authentication and
+              Authorization Grants", RFC 7523, DOI 10.17487/RFC7523, May
+              2015, <https://www.rfc-editor.org/info/rfc7523>.
+
+   [RFC7643]  Hunt, P., Ed., Grizzle, K., Wahlstroem, E., and C.
+              Mortimore, "System for Cross-domain Identity Management:
+              Core Schema", RFC 7643, DOI 10.17487/RFC7643, September
+              2015, <https://www.rfc-editor.org/info/rfc7643>.
+
+   [RFC7644]  Hunt, P., Ed., Grizzle, K., Ansari, M., Wahlstroem, E.,
+              and C. Mortimore, "System for Cross-domain Identity
+              Management: Protocol", RFC 7644, DOI 10.17487/RFC7644,
+              September 2015, <https://www.rfc-editor.org/info/rfc7644>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
+
+   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, "OAuth 2.0
+              Authorization Server Metadata", RFC 8414,
+              DOI 10.17487/RFC8414, June 2018,
+              <https://www.rfc-editor.org/info/rfc8414>.
+
+Authors' Addresses
+
+   Jen Schreiber
+   SGNL
+   Email: jen@sgnl.ai
+
+
+   Mark Maguire
+   Aujas Cybersecurity
+   Email: mark.maguire@aujas.com
