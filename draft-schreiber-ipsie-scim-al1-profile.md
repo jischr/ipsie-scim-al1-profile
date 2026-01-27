@@ -50,8 +50,8 @@ This document defines the IPSIE Account Lifecycle 1 (AL1) Profile for SCIM 2.0. 
 The profile addresses critical aspects of secure identity management, with particular emphasis on:
 
 * Client authentication
-* Retrieve, add, and modify Users.
-* Retrieve, add, and modify Groups.
+* Retrieve, add, and modify Users
+* Retrieve, add, and modify Groups
 * Synchronization of data from the Identity Service to the Application
 
 By adhering to this profile, organizations can implement SCIM-based integrations that meet stringent security requirements while ensuring interoperability across different implementations.
@@ -68,24 +68,23 @@ SCIM
 
 SCIM Client
 
-> An application that uses the SCIM protocol to manage identity data maintained by the service provider. The client initiates SCIM HTTP requests to
-a target service provider.
+> An application that uses the SCIM protocol to manage identity data maintained by the service provider (SP). The client initiates SCIM HTTP requests to a target service provider. To clarify the relationship in terms of identity management, the Identity Provider (IdP) is the SCIM Client and initiates requests to the SP, which is the SCIM Server.
 
-SCIM Service Provider
+SCIM Server (also called SCIM Service Provider)
 
-> An HTTP web application that provides identity information via the SCIM protocol.
+> An HTTP web application that provides identity information via the SCIM protocol. To clarify the relationship in terms of identity management, the SP is the SCIM Server and receives the requests from the IdP, which is the SCIM Client.
 
 Role
 
-> TBD
+> A set of permissions. A role must be associated with an individual user, and the user gains the associated authorization when they are associated with the role. (include citation to IDPro terminology? -> Flanagan (Editor), H., (2022) “Terminology in the IDPro Body of Knowledge”, IDPro Body of Knowledge 1(12). doi: https://doi.org/10.55621/idpro.41)
 
-Identity Service
+Identity Service or Identity Provider (IdP)
 
-> Acts as the SCIM client, initiating all provisioning operations.
+> Acts as the SCIM client, initiating all provisioning, updates, and deprovisioning operations.
 
 Application
 
-> Acts as the SCIM service provider, hosting SCIM endpoints and processing all provisioning requests.
+> Acts as the SCIM server or service provider, hosting SCIM endpoints and processing all provisioning requests.
 
 Note: When SCIM is applied to the context of IPISIE, the Identity Service acts as the SCIM client and the Application acts as the SCIM service provider. The document will use the Role terms below for consistency between across IPSIE Profiles.
 
