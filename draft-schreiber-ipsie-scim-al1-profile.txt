@@ -5,8 +5,10 @@
 IPSIE                                                       J. Schreiber
 Internet-Draft                                                      SGNL
 Intended status: Informational                                M. Maguire
-Expires: 31 July 2026                                Aujas Cybersecurity
-                                                         27 January 2026
+Expires: 22 August 2026                              Aujas Cybersecurity
+                                                             P. Valarezo
+                                                             Independent
+                                                        18 February 2026
 
 
                        IPSIE AL1 SCIM 2.0 Profile
@@ -35,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 31 July 2026.
+   This Internet-Draft will expire on 22 August 2026.
 
 Copyright Notice
 
@@ -125,7 +127,7 @@ Table of Contents
    |  Provider (IdP) is the SCIM Client and initiates requests to the
    |  SP, which is the SCIM Server.
 
-   SCIM Server (also called SCIM Service Provider)
+   SCIM Server (also referred to as SCIM Service Provider)
 
    |  An HTTP web application that provides identity information via the
    |  SCIM protocol.  To clarify the relationship in terms of identity
@@ -134,13 +136,9 @@ Table of Contents
 
    Role
 
-   |  A set of permissions.  A role must be associated with an
-   |  individual user, and the user gains the associated authorization
-   |  when they are associated with the role. (include citation to IDPro
-   |  terminology? -> Flanagan (Editor), H., (2022) “Terminology in the
-   |  IDPro Body of Knowledge”, IDPro Body of Knowledge 1(12). doi:
-   |  https://doi.org/10.55621/idpro.41 (https://doi.org/10.55621/
-   |  idpro.41))
+   |  A set of permissions.  Any user or account within the same role
+   |  receives the predefined ability to access a resource and/or
+   |  perform an action.
 
    Identity Service or Identity Provider (IdP)
 
@@ -152,10 +150,10 @@ Table of Contents
    |  Acts as the SCIM server or service provider, hosting SCIM
    |  endpoints and processing all provisioning requests.
 
-   Note: When SCIM is applied to the context of IPISIE, the Identity
+   Note: When SCIM is applied to the context of IPSIE, the Identity
    Service acts as the SCIM client and the Application acts as the SCIM
    service provider.  The document will use the Role terms below for
-   consistency between across IPSIE Profiles.
+   consistency across IPSIE Profiles.
 
 4.  Profile
 
@@ -165,7 +163,7 @@ Table of Contents
    authentication and authorization of SCIM protocol.
 
    |  *Editor's Note:* This section should be expanded and may need to
-   |  reference the IPSIE Security Level 1 (SL1) profile.
+   |  reference the IPSIE Session Lifecycle 1 (SL1) profile.
 
    The following requirements ensure consistent and secure handling of
    access tokens and authorization server configuration:
@@ -482,3 +480,8 @@ Authors' Addresses
    Mark Maguire
    Aujas Cybersecurity
    Email: mark.maguire@aujas.com
+
+
+   Pablo Valarezo
+   Independent
+   Email: pxvalarezo@gmail.com
