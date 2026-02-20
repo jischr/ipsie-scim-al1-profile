@@ -36,6 +36,7 @@ organization = "Okta"
  [author.address]
  email = "danny.zollner@okta.com"
 
+[[author]]
 initials = "P."
 surname = "Valarezo"
 fullname = "Pablo Valarezo"
