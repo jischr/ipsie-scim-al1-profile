@@ -7,6 +7,7 @@
 <title>IPSIE AL1 SCIM 2.0 Profile</title>
 <meta content="Jen Schreiber" name="author">
 <meta content="Mark Maguire" name="author">
+<meta content="Danny Zollner" name="author">
 <meta content="Pablo Valarezo" name="author">
 <meta content="
        This document defines a profile for SCIM 2.0 to meet the security and interoperability requirements for identity lifecycle management within enterprises. Within the context of SCIM, The profile establishes requirements for provisioning, account management, client authentication, and identity synchronization. 
@@ -1055,7 +1056,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Schreiber, et al.</td>
-<td class="center">Expires 22 August 2026</td>
+<td class="center">Expires 24 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1068,12 +1069,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-schreiber-ipsie-scim-al1-profile-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-18" class="published">18 February 2026</time>
+<time datetime="2026-02-20" class="published">20 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Informational</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-22">22 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-24">24 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1083,6 +1084,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div class="author">
       <div class="author-name">M. Maguire</div>
 <div class="org">Aujas Cybersecurity</div>
+</div>
+<div class="author">
+      <div class="author-name">D. Zollner</div>
+<div class="org">Okta</div>
 </div>
 <div class="author">
       <div class="author-name">P. Valarezo</div>
@@ -1115,7 +1120,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 22 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1171,10 +1176,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
                     <p id="section-toc.1-1.4.2.2.2.1.1"><a href="#section-4.2.1" class="auto internal xref">4.2.1</a>.  <a href="#name-general-requirements" class="internal xref">General Requirements</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.2">
-                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-user-provisioning-operation" class="internal xref">User Provisioning Operations</a></p>
+                    <p id="section-toc.1-1.4.2.2.2.2.1"><a href="#section-4.2.2" class="auto internal xref">4.2.2</a>.  <a href="#name-user-provisioning" class="internal xref">User Provisioning</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2.2.3">
-                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-group-role-provisioning-ope" class="internal xref">Group (Role) Provisioning Operations</a></p>
+                    <p id="section-toc.1-1.4.2.2.2.3.1"><a href="#section-4.2.3" class="auto internal xref">4.2.3</a>.  <a href="#name-group-provisioning-operatio" class="internal xref">Group Provisioning Operations</a></p>
 </li>
                 </ul>
 </li>
@@ -1260,7 +1265,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </blockquote>
 <p id="section-3.1-3">SCIM Client<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <blockquote id="section-3.1-4">
-          <p id="section-3.1-4.1">An application that uses the SCIM protocol to manage identity data maintained by the service provider (SP). The client initiates SCIM HTTP requests to a target service provider. To clarify the relationship in terms of identity management, the Identity Provider (IdP) is the SCIM Client and initiates requests to the SP, which is the SCIM Server.<a href="#section-3.1-4.1" class="pilcrow">¶</a></p>
+          <p id="section-3.1-4.1">An application that uses the SCIM protocol to access or manage identity data maintained by the SCIM service provider (SP). The client initiates SCIM HTTP requests to a SCIM service provider. To clarify the relationship in terms of identity management, the Identity Provider (IdP) is the SCIM Client and initiates requests to the SP, which is the SCIM Server.<a href="#section-3.1-4.1" class="pilcrow">¶</a></p>
 </blockquote>
 <p id="section-3.1-5">SCIM Server (also referred to as SCIM Service Provider)<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <blockquote id="section-3.1-6">
@@ -1299,17 +1304,19 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </blockquote>
 <p id="section-4.1-3">The following requirements ensure  consistent and secure handling of access tokens and authorization server configuration:<a href="#section-4.1-3" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.1-4.1">OAuth 2.0 interactions MUST comply with JWT Client Authentication as defined in <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span><a href="#section-4.1-4.1" class="pilcrow">¶</a>
+<li class="compact" id="section-4.1-4.1">OAuth 2.0 interactions MUST use the client_credentials grant type with JWT Client Authentication as defined in <span>[<a href="#RFC7523" class="cite xref">RFC7523</a>]</span> section 2.2.<a href="#section-4.1-4.1" class="pilcrow">¶</a>
 </li>
-          <li class="compact" id="section-4.1-4.2">The token SHALL exchange a signed JWT for an access token and present that token in the {Authorization: Bearer} header on all subsequent SCIM requests.<a href="#section-4.1-4.2" class="pilcrow">¶</a>
+          <li class="compact" id="section-4.1-4.2">The Identity Provider SHALL acquire an access token and present that token in the {Authorization: Bearer} header on all subsequent SCIM requests.<a href="#section-4.1-4.2" class="pilcrow">¶</a>
 </li>
-          <li class="compact" id="section-4.1-4.3">The token MUST contain a "token_endpoint" value which is the URL of the Identity Service's OAuth 2.0 token endpoint.<a href="#section-4.1-4.3" class="pilcrow">¶</a>
+          <li class="compact" id="section-4.1-4.3">The Application's OAuth 2.0 authorization server SHALL NOT support inclusion of client credentials in the HTTP request-body<a href="#section-4.1-4.3" class="pilcrow">¶</a>
 </li>
-          <li class="compact" id="section-4.1-4.4">The Acess Token MUST include the "scim" scope and not grant broader permissions.<a href="#section-4.1-4.4" class="pilcrow">¶</a>
+          <li class="compact" id="section-4.1-4.4">The token MUST contain a "token_endpoint" value which is the URL of the Identity Service's OAuth 2.0 token endpoint.<a href="#section-4.1-4.4" class="pilcrow">¶</a>
 </li>
-          <li class="compact" id="section-4.1-4.5">All Authorization Server parameters SHOULD be discovered from OAuth Authorization Server metadata as defined in <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>.<a href="#section-4.1-4.5" class="pilcrow">¶</a>
+          <li class="compact" id="section-4.1-4.5">The Acess Token MUST include the "scim" scope and not grant broader permissions.<a href="#section-4.1-4.5" class="pilcrow">¶</a>
 </li>
-          <li class="compact" id="section-4.1-4.6">The Identity Service SHOULD expose a jwks_uri to allow the Application to perform signature verification<a href="#section-4.1-4.6" class="pilcrow">¶</a>
+          <li class="compact" id="section-4.1-4.6">All Authorization Server parameters SHOULD be discovered from OAuth Authorization Server metadata as defined in <span>[<a href="#RFC8414" class="cite xref">RFC8414</a>]</span>.<a href="#section-4.1-4.6" class="pilcrow">¶</a>
+</li>
+          <li class="compact" id="section-4.1-4.7">The Identity Service SHOULD expose a jwks_uri to allow the Application to perform signature verification<a href="#section-4.1-4.7" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1333,196 +1340,214 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
             <li class="compact" id="section-4.2.1-1.4">Local modifications to Users or Groups in the Application are prohibited.<a href="#section-4.2.1-1.4" class="pilcrow">¶</a>
 </li>
+            <li class="compact" id="section-4.2.1-1.5">The Application SHALL enforce rate limits on all SCIM endpoints and must respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.<a href="#section-4.2.1-1.5" class="pilcrow">¶</a>
+</li>
+            <li class="compact" id="section-4.2.1-1.6">The Identity Service SHALL use the HTTP PATCH method to update resources and SHALL NOT use the HTTP PUT method.<a href="#section-4.2.1-1.6" class="pilcrow">¶</a>
+</li>
           </ul>
 </section>
 </div>
-<div id="user-provisioning-operations">
+<div id="user-provisioning">
 <section id="section-4.2.2">
-          <h4 id="name-user-provisioning-operation">
-<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-user-provisioning-operation" class="section-name selfRef">User Provisioning Operations</a>
+          <h4 id="name-user-provisioning">
+<a href="#section-4.2.2" class="section-number selfRef">4.2.2. </a><a href="#name-user-provisioning" class="section-name selfRef">User Provisioning</a>
           </h4>
-<p id="section-4.2.2-1">The Application MUST provide support all User provisioning operations defined in this section.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
-<div id="create-user-post-users">
+<p id="section-4.2.2-1">Requirements for user provisioning operations are defined in this section.<a href="#section-4.2.2-1" class="pilcrow">¶</a></p>
+<div id="schema">
 <section id="section-4.2.2.1">
-            <h5 id="name-create-user-post-users">
-<a href="#section-4.2.2.1" class="section-number selfRef">4.2.2.1. </a><a href="#name-create-user-post-users" class="section-name selfRef">Create User (POST /Users)</a>
+            <h5 id="name-schema">
+<a href="#section-4.2.2.1" class="section-number selfRef">4.2.2.1. </a><a href="#name-schema" class="section-name selfRef">Schema</a>
             </h5>
-<p id="section-4.2.2.1-1">User creation is performed by the SCIM operation POST /Users.<a href="#section-4.2.2.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.1-2">In addition to the user attributes required by <span>[<a href="#RFC7643" class="cite xref">RFC7643</a>]</span>, the following attributes are required to be part of the User schema:<a href="#section-4.2.2.1-2" class="pilcrow">¶</a></p>
-<blockquote id="section-4.2.2.1-3">
-              <p id="section-4.2.2.1-3.1"><strong>Editor's Note:</strong> Should specify exact attribute names (e.g., "email" vs "emails") rather than keeping this vague.<a href="#section-4.2.2.1-3.1" class="pilcrow">¶</a></p>
-</blockquote>
+<p id="section-4.2.2.1-1">The Application MUST include the following attributes in the User schema:<a href="#section-4.2.2.1-1" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.2.2.1-4.1">An attribute which contains a unique identifier used by the enterprise to distinguish the owner of the account, such as "externalId."<a href="#section-4.2.2.1-4.1" class="pilcrow">¶</a>
+<li class="compact" id="section-4.2.2.1-2.1">userName<a href="#section-4.2.2.1-2.1" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.1-4.2">An attribute which contains the primary email address of the user, such as "email"<a href="#section-4.2.2.1-4.2" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.1-2.2">displayName<a href="#section-4.2.2.1-2.2" class="pilcrow">¶</a>
+</li>
+              <li class="compact" id="section-4.2.2.1-2.3">active<a href="#section-4.2.2.1-2.3" class="pilcrow">¶</a>
 </li>
             </ul>
+<p id="section-4.2.2.1-3">Additionally, the "externalId" attribute defined as optional in the "common" resource schema in <span>[<a href="#RFC7643" class="cite xref">RFC7643</a>]</span> MUST be supported by the Application.<a href="#section-4.2.2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="passwords-and-other-credentials">
+<section id="section-4.2.2.2">
+            <h5 id="name-passwords-and-other-credent">
+<a href="#section-4.2.2.2" class="section-number selfRef">4.2.2.2. </a><a href="#name-passwords-and-other-credent" class="section-name selfRef">Passwords and other credentials</a>
+            </h5>
+<p id="section-4.2.2.2-1">The Application MUST NOT support the "password" attribute.<a href="#section-4.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.2-2">The Identity Service MUST NOT include the "password" attribute in any SCIM requests.<a href="#section-4.2.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.2-3">A user resource may have various credentials or similar data associated with them. This includes passwords, password hashes, private keys, and multi-factor authentication data such as Time-Based One-Time Password (TOTP) seeds. The Application MUST NOT define attributes containing credentials in custom schemas. The Identity Service MUST NOT send values for user credentials in any SCIM requests.<a href="#section-4.2.2.2-3" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.2.2-4">
+              <p id="section-4.2.2.2-4.1"><strong>DZ note</strong> Set the credential-related requirements as aggressively restrictive for now, can define any exceptions or other rules later after discussion.<a href="#section-4.2.2.2-4.1" class="pilcrow">¶</a></p>
+</blockquote>
+</section>
+</div>
+<div id="create-user-post-users">
+<section id="section-4.2.2.3">
+            <h5 id="name-create-user-post-users">
+<a href="#section-4.2.2.3" class="section-number selfRef">4.2.2.3. </a><a href="#name-create-user-post-users" class="section-name selfRef">Create User (POST /Users)</a>
+            </h5>
+<p id="section-4.2.2.3-1">The Identity Service and the Application MUST support user creation via POST /Users.<a href="#section-4.2.2.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="update-user-patch-users-id">
-<section id="section-4.2.2.2">
+<section id="section-4.2.2.4">
             <h5 id="name-update-user-patch-users-id">
-<a href="#section-4.2.2.2" class="section-number selfRef">4.2.2.2. </a><a href="#name-update-user-patch-users-id" class="section-name selfRef">Update User (PATCH /Users/{id})</a>
+<a href="#section-4.2.2.4" class="section-number selfRef">4.2.2.4. </a><a href="#name-update-user-patch-users-id" class="section-name selfRef">Update User (PATCH /Users/{id})</a>
             </h5>
-<p id="section-4.2.2.2-1">User updates are performed by the SCIM operation PATCH /Users/{id}<a href="#section-4.2.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.4-1">The Identity Service and the Application MUST support updating a user's attribute values via the SCIM operation PATCH /Users/{id}.<a href="#section-4.2.2.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deactivate-or-reactivate-user-patch-users-id">
-<section id="section-4.2.2.3">
+<section id="section-4.2.2.5">
             <h5 id="name-deactivate-or-reactivate-us">
-<a href="#section-4.2.2.3" class="section-number selfRef">4.2.2.3. </a><a href="#name-deactivate-or-reactivate-us" class="section-name selfRef">Deactivate or Reactivate User (PATCH /Users/{id})</a>
+<a href="#section-4.2.2.5" class="section-number selfRef">4.2.2.5. </a><a href="#name-deactivate-or-reactivate-us" class="section-name selfRef">Deactivate or Reactivate User (PATCH /Users/{id})</a>
             </h5>
-<p id="section-4.2.2.3-1">Changes to the user activation status, such deactivation and reactivation, are performed by the SCIM operation PATCH /Users/{id}<a href="#section-4.2.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.3-2">The Identity Service SHOULD propagate user deactivation events to the Application within 5 minutes of the user being deactivated.<a href="#section-4.2.2.3-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.3-3">The Application SHOULD respond to user deactivation events by revoking the ability for the user to continue accessing the Application, including the revocation of currently active sessions. The revocation mechanism outside the scope of this profile. Revocation SHOULD occur within 5 minutes of receiving the deactivation request.<a href="#section-4.2.2.3-3" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.3-4">When a user account is deactivated, all access mechanisms and authorizations associated with that account MUST also be deactivated. This includes, but is not limited to:<a href="#section-4.2.2.3-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.5-1">Changes to the user activation status, such deactivation and reactivation, are performed by the SCIM operation PATCH /Users/{id}<a href="#section-4.2.2.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.5-2">The Identity Service SHOULD propagate user deactivation events to the Application within 5 minutes of the user being deactivated.<a href="#section-4.2.2.5-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.5-3">The Application SHOULD respond to user deactivation events by revoking the ability for the user to continue accessing the Application, including the revocation of currently active sessions. Session revocation mechanisms are outside the scope of this profile. Revocation SHOULD occur within 5 minutes of receiving the deactivation request.<a href="#section-4.2.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.5-4">When a user account is deactivated, all access mechanisms and authorizations associated with that account MUST also be deactivated. This includes, but is not limited to:<a href="#section-4.2.2.5-4" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.2.2.3-5.1">Web sessions<a href="#section-4.2.2.3-5.1" class="pilcrow">¶</a>
+<li class="compact" id="section-4.2.2.5-5.1">Web sessions<a href="#section-4.2.2.5-5.1" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.3-5.2">API tokens<a href="#section-4.2.2.3-5.2" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.5-5.2">API tokens<a href="#section-4.2.2.5-5.2" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.3-5.3">Refresh tokens<a href="#section-4.2.2.3-5.3" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.5-5.3">Refresh tokens<a href="#section-4.2.2.5-5.3" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.3-5.4">Personal access tokens<a href="#section-4.2.2.3-5.4" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.5-5.4">Personal access tokens<a href="#section-4.2.2.5-5.4" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.3-5.5">SSH keys associated with the user<a href="#section-4.2.2.3-5.5" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.5-5.5">SSH keys associated with the user<a href="#section-4.2.2.5-5.5" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.3-5.6">Device-based authentication credentials<a href="#section-4.2.2.3-5.6" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.5-5.6">Device-based authentication credentials<a href="#section-4.2.2.5-5.6" class="pilcrow">¶</a>
 </li>
             </ul>
-<p id="section-4.2.2.3-6">The Application MUST allow reactivation of a deactivated user.<a href="#section-4.2.2.3-6" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.5-6">The Application MUST allow reactivation of a deactivated user.<a href="#section-4.2.2.5-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="delete-user-delete-users-id">
-<section id="section-4.2.2.4">
+<section id="section-4.2.2.6">
             <h5 id="name-delete-user-delete-users-id">
-<a href="#section-4.2.2.4" class="section-number selfRef">4.2.2.4. </a><a href="#name-delete-user-delete-users-id" class="section-name selfRef">Delete User (DELETE /Users/{id})</a>
+<a href="#section-4.2.2.6" class="section-number selfRef">4.2.2.6. </a><a href="#name-delete-user-delete-users-id" class="section-name selfRef">Delete User (DELETE /Users/{id})</a>
             </h5>
-<p id="section-4.2.2.4-1">User deletions are performed by the SCIM operation DELETE /Users/{id}<a href="#section-4.2.2.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.4-2">After a user is deleted, the Application MUST allow the creation of a new user with the same username.<a href="#section-4.2.2.4-2" class="pilcrow">¶</a></p>
-<blockquote id="section-4.2.2.4-3">
-              <p id="section-4.2.2.4-3.1"><strong>Editor's Note:</strong> Need to clarify implications for maintaining user data and avoiding conflicts when recreating users with the same username.<a href="#section-4.2.2.4-3.1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.6-1">Applications MAY allow users to be deleted via the SCIM operation DELETE /Users/{id}.<a href="#section-4.2.2.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.6-2">After a user is deleted, the Application MUST allow the creation of a new user with the same username.<a href="#section-4.2.2.6-2" class="pilcrow">¶</a></p>
+<blockquote id="section-4.2.2.6-3">
+              <p id="section-4.2.2.6-3.1"><strong>Editor's Note:</strong> Need to clarify implications for maintaining user data and avoiding conflicts when recreating users with the same username.<a href="#section-4.2.2.6-3.1" class="pilcrow">¶</a></p>
 </blockquote>
 </section>
 </div>
 <div id="get-all-users-get-users">
-<section id="section-4.2.2.5">
+<section id="section-4.2.2.7">
             <h5 id="name-get-all-users-get-users">
-<a href="#section-4.2.2.5" class="section-number selfRef">4.2.2.5. </a><a href="#name-get-all-users-get-users" class="section-name selfRef">Get All Users (GET /Users)</a>
+<a href="#section-4.2.2.7" class="section-number selfRef">4.2.2.7. </a><a href="#name-get-all-users-get-users" class="section-name selfRef">Get All Users (GET /Users)</a>
             </h5>
-<p id="section-4.2.2.5-1">Get all users in the system is performed by the SCIM operation GET /Users<a href="#section-4.2.2.5-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.5-2">This endpoint ensures that all users are managed by the Identity Service.<a href="#section-4.2.2.5-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.5-3">To ensure that large amounts of data can be read from the Application, the application must support with index-based or cursor-based pagination for the GET /Users request. To ensure system stability and prevent abuse, the Application SHALL enforce rate limits on this endpoint and must respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.<a href="#section-4.2.2.5-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.7-1">The Application MUST support retrieval of all users via the SCIM operation GET /Users.<a href="#section-4.2.2.7-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.7-2">The Application MUST support at least one pagination method and SHOULD avoid returning more than 1,000 users per page. Support for cursor-based pagination by the Application is RECOMMENDED.<a href="#section-4.2.2.7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="get-user-by-id-get-users-id">
-<section id="section-4.2.2.6">
+<section id="section-4.2.2.8">
             <h5 id="name-get-user-by-id-get-users-id">
-<a href="#section-4.2.2.6" class="section-number selfRef">4.2.2.6. </a><a href="#name-get-user-by-id-get-users-id" class="section-name selfRef">Get User By ID (GET /Users/{id})</a>
+<a href="#section-4.2.2.8" class="section-number selfRef">4.2.2.8. </a><a href="#name-get-user-by-id-get-users-id" class="section-name selfRef">Get User By ID (GET /Users/{id})</a>
             </h5>
-<p id="section-4.2.2.6-1">User searches by id are performed by the SCIM operation GET /Users/{id}<a href="#section-4.2.2.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.8-1">The Application MUST support retrieving a single user by ID via the SCIM operation GET /Users/{id}.<a href="#section-4.2.2.8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="list-users-by-alternate-identifier-get-users">
-<section id="section-4.2.2.7">
+<section id="section-4.2.2.9">
             <h5 id="name-list-users-by-alternate-ide">
-<a href="#section-4.2.2.7" class="section-number selfRef">4.2.2.7. </a><a href="#name-list-users-by-alternate-ide" class="section-name selfRef">List Users By Alternate Identifier (GET /Users?)</a>
+<a href="#section-4.2.2.9" class="section-number selfRef">4.2.2.9. </a><a href="#name-list-users-by-alternate-ide" class="section-name selfRef">List Users By Alternate Identifier (GET /Users?)</a>
             </h5>
-<p id="section-4.2.2.7-1">User searches by alternate identifier are performed via the SCIM operation: GET /Users?filter={filterExpression}<a href="#section-4.2.2.7-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.2.7-2">Application Providers MUST support the following filter expressions:<a href="#section-4.2.2.7-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.9-1">The Application MUST support the SCIM "filter" query parameter, performed via the SCIM operation: GET /Users?filter={filterExpression}<a href="#section-4.2.2.9-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.2.9-2">Application Providers MUST support the following filter expressions:<a href="#section-4.2.2.9-2" class="pilcrow">¶</a></p>
 <ul class="compact">
-<li class="compact" id="section-4.2.2.7-3.1">username eq {username}<a href="#section-4.2.2.7-3.1" class="pilcrow">¶</a>
+<li class="compact" id="section-4.2.2.9-3.1">username eq {username}<a href="#section-4.2.2.9-3.1" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.7-3.2">externalId eq {externalId}<a href="#section-4.2.2.7-3.2" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.9-3.2">externalId eq {externalId}<a href="#section-4.2.2.9-3.2" class="pilcrow">¶</a>
 </li>
-              <li class="compact" id="section-4.2.2.7-3.3">emails[value eq {email}]<a href="#section-4.2.2.7-3.3" class="pilcrow">¶</a>
+              <li class="compact" id="section-4.2.2.9-3.3">emails[value eq {email}]<a href="#section-4.2.2.9-3.3" class="pilcrow">¶</a>
+</li>
+              <li class="compact" id="section-4.2.2.9-3.4">emails[type eq "work" and value eq {email}]<a href="#section-4.2.2.9-3.4" class="pilcrow">¶</a>
 </li>
             </ul>
 </section>
 </div>
 </section>
 </div>
-<div id="group-role-provisioning-operations">
+<div id="group-provisioning-operations">
 <section id="section-4.2.3">
-          <h4 id="name-group-role-provisioning-ope">
-<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-group-role-provisioning-ope" class="section-name selfRef">Group (Role) Provisioning Operations</a>
+          <h4 id="name-group-provisioning-operatio">
+<a href="#section-4.2.3" class="section-number selfRef">4.2.3. </a><a href="#name-group-provisioning-operatio" class="section-name selfRef">Group Provisioning Operations</a>
           </h4>
-<p id="section-4.2.3-1">The Application MUST provide support all Group provisioning operations defined in this section.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.3-2"><strong>Note</strong>: Within the IPSIE standard, Application permissions are referred to as "Roles." Within SCIM, Application permissions are referred to as "Groups." The term "Role" in IPSIE is functionally equivalent to the term "Group" in SCIM.<a href="#section-4.2.3-2" class="pilcrow">¶</a></p>
-<div id="create-group-post-groups">
+<p id="section-4.2.3-1">Requirements for group provisioning operations are defined in this section. The Application MAY implement support for groups and MUST follow the below requirements if it does.<a href="#section-4.2.3-1" class="pilcrow">¶</a></p>
+<div id="schema-1">
 <section id="section-4.2.3.1">
-            <h5 id="name-create-group-post-groups">
-<a href="#section-4.2.3.1" class="section-number selfRef">4.2.3.1. </a><a href="#name-create-group-post-groups" class="section-name selfRef">Create Group (POST /Groups)</a>
+            <h5 id="name-schema-2">
+<a href="#section-4.2.3.1" class="section-number selfRef">4.2.3.1. </a><a href="#name-schema-2" class="section-name selfRef">Schema</a>
             </h5>
-<p id="section-4.2.3.1-1">Group creation is performed by the SCIM operation POST /Group.<a href="#section-4.2.3.1-1" class="pilcrow">¶</a></p>
-<blockquote id="section-4.2.3.1-2">
-              <p id="section-4.2.3.1-2.1"><strong>Editor's Note:</strong> This section needs additional details about required Group attributes and schema requirements.<a href="#section-4.2.3.1-2.1" class="pilcrow">¶</a></p>
-</blockquote>
+<p id="section-4.2.3.1-1">The Application MUST include the following attributes in the Group schema:<a href="#section-4.2.3.1-1" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-4.2.3.1-2.1">displayName<a href="#section-4.2.3.1-2.1" class="pilcrow">¶</a>
+</li>
+              <li class="compact" id="section-4.2.3.1-2.2">members<a href="#section-4.2.3.1-2.2" class="pilcrow">¶</a>
+</li>
+            </ul>
+<p id="section-4.2.3.1-3">Additionally, the "externalId" attribute defined as optional in the "common" resource schema in <span>[<a href="#RFC7643" class="cite xref">RFC7643</a>]</span> MUST be supported by the Application.<a href="#section-4.2.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.1-4">The Application SHOULD NOT allow multiple groups to have the same value for the "displayName" attribute".<a href="#section-4.2.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.1-5">The Identity Service SHOULD use a unique value for the "displayName" attribute.<a href="#section-4.2.3.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="create-group-post-groups">
+<section id="section-4.2.3.2">
+            <h5 id="name-create-group-post-groups">
+<a href="#section-4.2.3.2" class="section-number selfRef">4.2.3.2. </a><a href="#name-create-group-post-groups" class="section-name selfRef">Create Group (POST /Groups)</a>
+            </h5>
+<p id="section-4.2.3.2-1">The Identity Service and the Application MUST support group creation via POST /Groups.<a href="#section-4.2.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.2-2">The Application MUST allow groups to be created with zero members.<a href="#section-4.2.3.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="get-all-groups-get-groups">
-<section id="section-4.2.3.2">
+<section id="section-4.2.3.3">
             <h5 id="name-get-all-groups-get-groups">
-<a href="#section-4.2.3.2" class="section-number selfRef">4.2.3.2. </a><a href="#name-get-all-groups-get-groups" class="section-name selfRef">Get All Groups (GET /Groups)</a>
+<a href="#section-4.2.3.3" class="section-number selfRef">4.2.3.3. </a><a href="#name-get-all-groups-get-groups" class="section-name selfRef">Get All Groups (GET /Groups)</a>
             </h5>
-<p id="section-4.2.3.2-1">A search for all groups in the system is performed by the SCIM operation GET /Groups<a href="#section-4.2.3.2-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.3.2-2">This endpoint ensures that all groups are managed by the Identity Service.<a href="#section-4.2.3.2-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.3.2-3">To ensure that large amounts of data can be read from the Application, the application MUST support with index-based or cursor-based pagination for the GET /Groups request. To ensure system stability and prevent abuse, the Application SHALL enforce rate limits on this endpoint and MUST respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.<a href="#section-4.2.3.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.3-1">The Application MUST support retrieval of all groups via the SCIM operation GET /Groups.<a href="#section-4.2.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.3-2">The Application MUST support the attributes= and excludedAttributes= parameters.<a href="#section-4.2.3.3-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.3-3">The Identity Service SHOULD include excludedAttributes=members in the HTTP URI when listing all groups.<a href="#section-4.2.3.3-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="get-group-by-id-get-group-id">
-<section id="section-4.2.3.3">
+<section id="section-4.2.3.4">
             <h5 id="name-get-group-by-id-get-group-i">
-<a href="#section-4.2.3.3" class="section-number selfRef">4.2.3.3. </a><a href="#name-get-group-by-id-get-group-i" class="section-name selfRef">Get Group By ID (GET /Group/{id})</a>
+<a href="#section-4.2.3.4" class="section-number selfRef">4.2.3.4. </a><a href="#name-get-group-by-id-get-group-i" class="section-name selfRef">Get Group By ID (GET /Group/{id})</a>
             </h5>
-<p id="section-4.2.3.3-1">Group searches by id are performed by the SCIM operation GET /Group/{id}?excludedAttributes=members<a href="#section-4.2.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.4-1">The Application MUST support retrieving a single group by ID via the SCIM operation GET /Groups/{id}.<a href="#section-4.2.3.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="list-groups-by-alternate-identifier-get-groups">
-<section id="section-4.2.3.4">
-            <h5 id="name-list-groups-by-alternate-id">
-<a href="#section-4.2.3.4" class="section-number selfRef">4.2.3.4. </a><a href="#name-list-groups-by-alternate-id" class="section-name selfRef">List Groups By Alternate Identifier (GET /Groups?)</a>
-            </h5>
-<p id="section-4.2.3.4-1">User lookups by alternate identifier are performed by the SCIM operation GET /Groups?filter={filterExpression}&amp;excludedAttributes=members<a href="#section-4.2.3.4-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.3.4-2">Application Providers MUST support the following filter expressions: TBD<a href="#section-4.2.3.4-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="add-or-remove-group-members-patch-group-id">
 <section id="section-4.2.3.5">
-            <h5 id="name-add-or-remove-group-members">
-<a href="#section-4.2.3.5" class="section-number selfRef">4.2.3.5. </a><a href="#name-add-or-remove-group-members" class="section-name selfRef">Add or Remove Group Members (PATCH /Group/{id})</a>
+            <h5 id="name-list-groups-by-alternate-id">
+<a href="#section-4.2.3.5" class="section-number selfRef">4.2.3.5. </a><a href="#name-list-groups-by-alternate-id" class="section-name selfRef">List Groups By Alternate Identifier (GET /Groups?)</a>
             </h5>
-<p id="section-4.2.3.5-1">Members are added or removed from Groups via the SCIM operation PATCH /Groups/{id}<a href="#section-4.2.3.5-1" class="pilcrow">¶</a></p>
-<p id="section-4.2.3.5-2">For each Operation in the PATCH:<a href="#section-4.2.3.5-2" class="pilcrow">¶</a></p>
-<p id="section-4.2.3.5-3">The op attribute MUST contain either "add" or "remove".<a href="#section-4.2.3.5-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-4.2.3.5-4.1">
-                <p id="section-4.2.3.5-4.1.1">When the op is "add":<a href="#section-4.2.3.5-4.1.1" class="pilcrow">¶</a></p>
-<ul class="compact normal">
-<li class="compact normal" id="section-4.2.3.5-4.1.2.1">The path attribute MUST be "members".<a href="#section-4.2.3.5-4.1.2.1" class="pilcrow">¶</a>
+<p id="section-4.2.3.5-1">The Application MUST support the SCIM "filter" query parameter, performed via the SCIM operation: GET /Groups?filter={filterExpression}<a href="#section-4.2.3.5-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.5-2">The Application MUST support the following filter expressions for groups:<a href="#section-4.2.3.5-2" class="pilcrow">¶</a></p>
+<ul class="compact">
+<li class="compact" id="section-4.2.3.5-3.1">displayName eq {displayName}<a href="#section-4.2.3.5-3.1" class="pilcrow">¶</a>
 </li>
-                  <li class="compact normal" id="section-4.2.3.5-4.1.2.2">The value attribute MUST be an array of Group member elements, as defined in Section 4.2 of the SCIM Core Schema <span>[<a href="#RFC7643" class="cite xref">RFC7643</a>]</span>. Each member MUST contain a value subattribute with the id of the resource being added to the group.<a href="#section-4.2.3.5-4.1.2.2" class="pilcrow">¶</a>
-</li>
-                </ul>
-</li>
-              <li class="normal" id="section-4.2.3.5-4.2">
-                <p id="section-4.2.3.5-4.2.1">When the op is "remove":<a href="#section-4.2.3.5-4.2.1" class="pilcrow">¶</a></p>
-<ul class="compact normal">
-<li class="compact normal" id="section-4.2.3.5-4.2.2.1">
-                    <p id="section-4.2.3.5-4.2.2.1.1">The path attribute MUST be either:<a href="#section-4.2.3.5-4.2.2.1.1" class="pilcrow">¶</a></p>
-<ul class="compact normal">
-<li class="compact normal" id="section-4.2.3.5-4.2.2.1.2.1">"members" (to remove all members)<a href="#section-4.2.3.5-4.2.2.1.2.1" class="pilcrow">¶</a>
-</li>
-                      <li class="compact normal" id="section-4.2.3.5-4.2.2.1.2.2">"members[value eq {id}]" (to remove a single member)<a href="#section-4.2.3.5-4.2.2.1.2.2" class="pilcrow">¶</a>
-</li>
-                    </ul>
-</li>
-                  <li class="compact normal" id="section-4.2.3.5-4.2.2.2">The value attribute MUST be unspecified.<a href="#section-4.2.3.5-4.2.2.2" class="pilcrow">¶</a>
-</li>
-                </ul>
+              <li class="compact" id="section-4.2.3.5-3.2">externalId eq {externalId}<a href="#section-4.2.3.5-3.2" class="pilcrow">¶</a>
 </li>
             </ul>
+</section>
+</div>
+<div id="update-group-patch-group-id">
+<section id="section-4.2.3.6">
+            <h5 id="name-update-group-patch-group-id">
+<a href="#section-4.2.3.6" class="section-number selfRef">4.2.3.6. </a><a href="#name-update-group-patch-group-id" class="section-name selfRef">Update Group (PATCH /Group/{id})</a>
+            </h5>
+<p id="section-4.2.3.6-1">The Identity Service and the Application MUST support updating a group's attribute values via the SCIM operation PATCH /Groups/{id}.<a href="#section-4.2.3.6-1" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.6-2">The Application MUST support the inclusion of at least 50 add or remove operations on the "members" attribute in a single PATCH request.<a href="#section-4.2.3.6-2" class="pilcrow">¶</a></p>
+<p id="section-4.2.3.6-3">The Identity Service SHOULD compile multiple changes to the "members" attribute into a single PATCH request.<a href="#section-4.2.3.6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1540,7 +1565,6 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-4.3.1" class="section-number selfRef">4.3.1. </a><a href="#name-resourcetypes" class="section-name selfRef">ResourceTypes</a>
           </h4>
 <p id="section-4.3.1-1">Application MUST host a /ResourceTypes endpoint, as defined in Section 4 of <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>.<a href="#section-4.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.3.1-2">The supported ResourceTypes MUST include Users and Groups.<a href="#section-4.3.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="serviceproviderconfig">
@@ -1557,7 +1581,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <h4 id="name-schemas">
 <a href="#section-4.3.3" class="section-number selfRef">4.3.3. </a><a href="#name-schemas" class="section-name selfRef">Schemas</a>
           </h4>
-<p id="section-4.3.3-1">Application Providers MUST host a /Schemas endpoint to describe the supported schemas, as defined in Section 4 of <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>. There must be a schema for both Users and Groups. The schemas must include all required attributes from RFC 7643 and from Section 3.2.3 (Create User).<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-4.3.3-1">Application Providers MUST host a /Schemas endpoint to describe the supported schemas, as defined in Section 4 of <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span>. There must be a schema for each implemented resource type. Schemas returned by the Application MUST include all implemented attributes and MUST NOT include attributes that are not implemented.<a href="#section-4.3.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1570,7 +1594,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
 <p id="section-5-1">For SCIM security considerations, see <span>[<a href="#RFC7643" class="cite xref">RFC7643</a>]</span> and <span>[<a href="#RFC7644" class="cite xref">RFC7644</a>]</span><a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">Additionally, the following requierements are included to address security considerations.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-2">Additionally, the following requirements are included to address security considerations.<a href="#section-5-2" class="pilcrow">¶</a></p>
 <ul class="compact">
 <li class="compact" id="section-5-3.1">
           <strong>Transport Security</strong>: All endpoints SHALL enforce TLS 1.2 or later with strong cipher suites and certificate validation.<a href="#section-5-3.1" class="pilcrow">¶</a>
@@ -1582,7 +1606,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
           <strong>Replay Resistance</strong>: Access tokens SHALL expire and nonces SHALL be validated to prevent replay.<a href="#section-5-3.3" class="pilcrow">¶</a>
 </li>
         <li class="compact" id="section-5-3.4">
-          <strong>Auditing</strong>: All provisioning actions and responses SHALL be logged for audit and troubleshooting.<a href="#section-5-3.4" class="pilcrow">¶</a>
+          <strong>Auditing</strong>: All SCIM requests resulting in the creation, deletion, or modification of a SCIM resource SHALL be logged for audit and troubleshooting.<a href="#section-5-3.4" class="pilcrow">¶</a>
 </li>
         <li class="compact" id="section-5-3.5">
           <strong>Rate Limiting</strong>: All endpoints SHALL enforce rate limiting and must respond with "429 Too Many Requests" when limits are exceeded.<a href="#section-5-3.5" class="pilcrow">¶</a>
@@ -1617,7 +1641,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         <li class="normal" id="section-7-2.2">
           <p id="section-7-2.2.1"><strong>Application (SCIM service provider)</strong><a href="#section-7-2.2.1" class="pilcrow">¶</a></p>
 <ul class="compact normal">
-<li class="compact normal" id="section-7-2.2.2.1">SHALL host all SCIM endpoints with full support for User and Group provisioning.<a href="#section-7-2.2.2.1" class="pilcrow">¶</a>
+<li class="compact normal" id="section-7-2.2.2.1">SHALL host all SCIM endpoints with full support for User provisioning, and if supported, Group provisioning.<a href="#section-7-2.2.2.1" class="pilcrow">¶</a>
 </li>
             <li class="compact normal" id="section-7-2.2.2.2">SHALL prevent local modifications outside of SCIM.<a href="#section-7-2.2.2.2" class="pilcrow">¶</a>
 </li>
@@ -1685,6 +1709,14 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <div class="email">
 <span>Email:</span>
 <a href="mailto:mark.maguire@aujas.com" class="email">mark.maguire@aujas.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Danny Zollner</span></div>
+<div dir="auto" class="left"><span class="org">Okta</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:danny.zollner@okta.com" class="email">danny.zollner@okta.com</a>
 </div>
 </address>
 <address class="vcard">
