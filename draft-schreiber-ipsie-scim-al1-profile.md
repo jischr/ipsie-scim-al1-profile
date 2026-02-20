@@ -130,9 +130,9 @@ The following requirements ensure  consistent and secure handling of access toke
 * All SCIM operations SHALL be authenticated and authorized via OAuth 2.0 as specified in (#authn-authz).
 * Local modifications to Users or Groups in the Application are prohibited.
 * The Application SHALL enforce rate limits on all SCIM endpoints and must respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.
-* The Identity Service SHALL use the HTTP PATCH method to update resources and SHALL NOT use the HTTP PUT method. 
+* The Identity Service SHALL use the HTTP PATCH method to update resources and SHALL NOT use the HTTP PUT method.
 
-### User Provisioning 
+### User Provisioning
 
 Requirements for user provisioning operations are defined in this section.
 
@@ -148,17 +148,17 @@ Additionally, the "externalId" attribute defined as optional in the "common" res
 
 #### Passwords and other credentials
 
-The Application MUST NOT support the "password" attribute. 
+The Application MUST NOT support the "password" attribute.
 
-The Identity Service MUST NOT include the "password" attribute in any SCIM requests. 
+The Identity Service MUST NOT include the "password" attribute in any SCIM requests.
 
-A user resource may have various credentials or similar data associated with them. This includes passwords, password hashes, private keys, and multi-factor authentication data such as Time-Based One-Time Password (TOTP) seeds. The Application MUST NOT define attributes containing credentials in custom schemas. The Identity Service MUST NOT send values for user credentials in any SCIM requests.  
+A user resource may have various credentials or similar data associated with them. This includes passwords, password hashes, private keys, and multi-factor authentication data such as Time-Based One-Time Password (TOTP) seeds. The Application MUST NOT define attributes containing credentials in custom schemas. The Identity Service MUST NOT send values for user credentials in any SCIM requests.
 
 > **DZ note** Set the credential-related requirements as aggressively restrictive for now, can define any exceptions or other rules later after discussion.
 
 #### Create User (POST /Users)
 
-The Identity Service and the Application MUST support user creation via POST /Users. 
+The Identity Service and the Application MUST support user creation via POST /Users.
 
 #### Update User (PATCH /Users/{id})
 
@@ -185,7 +185,7 @@ The Application MUST allow reactivation of a deactivated user.
 
 #### Delete User (DELETE /Users/{id})
 
-Applications MAY allow users to be deleted via the SCIM operation DELETE /Users/{id}. 
+Applications MAY allow users to be deleted via the SCIM operation DELETE /Users/{id}.
 
 After a user is deleted, the Application MUST allow the creation of a new user with the same username.
 
@@ -227,21 +227,21 @@ Additionally, the "externalId" attribute defined as optional in the "common" res
 
 The Application SHOULD NOT allow multiple groups to have the same value for the "displayName" attribute".
 
-The Identity Service SHOULD use a unique value for the "displayName" attribute.  
+The Identity Service SHOULD use a unique value for the "displayName" attribute.
 
 #### Create Group (POST /Groups)
 
 The Identity Service and the Application MUST support group creation via POST /Groups.
 
-The Application MUST allow groups to be created with zero members. 
+The Application MUST allow groups to be created with zero members.
 
 #### Get All Groups (GET /Groups)
 
-The Application MUST support retrieval of all groups via the SCIM operation GET /Groups. 
+The Application MUST support retrieval of all groups via the SCIM operation GET /Groups.
 
-The Application MUST support the attributes= and excludedAttributes= parameters. 
+The Application MUST support the attributes= and excludedAttributes= parameters.
 
-The Identity Service SHOULD include excludedAttributes=members in the HTTP URI when listing all groups. 
+The Identity Service SHOULD include excludedAttributes=members in the HTTP URI when listing all groups.
 
 #### Get Group By ID (GET /Group/{id})
 
@@ -258,11 +258,11 @@ The Application MUST support the following filter expressions for groups:
 
 #### Update Group (PATCH /Group/{id})
 
-The Identity Service and the Application MUST support updating a group's attribute values via the SCIM operation PATCH /Groups/{id}. 
+The Identity Service and the Application MUST support updating a group's attribute values via the SCIM operation PATCH /Groups/{id}.
 
 The Application MUST support the inclusion of at least 50 add or remove operations on the "members" attribute in a single PATCH request.
 
-The Identity Service SHOULD compile multiple changes to the "members" attribute into a single PATCH request. 
+The Identity Service SHOULD compile multiple changes to the "members" attribute into a single PATCH request.
 
 ## Metadata Endpoints
 
