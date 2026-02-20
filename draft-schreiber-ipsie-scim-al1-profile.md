@@ -29,6 +29,14 @@ organization = "Aujas Cybersecurity"
   email = "mark.maguire@aujas.com"
 
 [[author]]
+initials = "D."
+surname = "Zollner"
+fullname = "Danny Zollner"
+organization = "Okta"
+ [author.address]
+ email = "danny.zollner@okta.com"
+
+[[author]]
 initials = "P."
 surname = "Valarezo"
 fullname = "Pablo Valarezo"
@@ -75,7 +83,7 @@ SCIM
 
 SCIM Client
 
-> An application that uses the SCIM protocol to manage identity data maintained by the service provider (SP). The client initiates SCIM HTTP requests to a target service provider. To clarify the relationship in terms of identity management, the Identity Provider (IdP) is the SCIM Client and initiates requests to the SP, which is the SCIM Server.
+> An application that uses the SCIM protocol to access or manage identity data maintained by the SCIM service provider (SP). The client initiates SCIM HTTP requests to a SCIM service provider. To clarify the relationship in terms of identity management, the Identity Provider (IdP) is the SCIM Client and initiates requests to the SP, which is the SCIM Server.
 
 SCIM Server (also referred to as SCIM Service Provider)
 
@@ -105,8 +113,9 @@ The Identity Service and Application MUST use OAuth 2.0 [@!RFC6749] for authenti
 
 The following requirements ensure  consistent and secure handling of access tokens and authorization server configuration:
 
-* OAuth 2.0 interactions MUST comply with JWT Client Authentication as defined in [@!RFC7523]
-* The token SHALL exchange a signed JWT for an access token and present that token in the {Authorization: Bearer} header on all subsequent SCIM requests.
+* OAuth 2.0 interactions MUST use the client_credentials grant type with JWT Client Authentication as defined in [@!RFC7523] section 2.2.
+* The Identity Provider SHALL acquire an access token and present that token in the {Authorization: Bearer} header on all subsequent SCIM requests.
+* The Application's OAuth 2.0 authorization server SHALL NOT support inclusion of client credentials in the HTTP request-body
 * The token MUST contain a "token_endpoint" value which is the URL of the Identity Service's OAuth 2.0 token endpoint.
 * The Acess Token MUST include the "scim" scope and not grant broader permissions.
 * All Authorization Server parameters SHOULD be discovered from OAuth Authorization Server metadata as defined in [@!RFC8414].
@@ -120,25 +129,40 @@ The following requirements ensure  consistent and secure handling of access toke
 * The Application SHALL implement the required functionality of a SCIM service provider as defined in [@!RFC7643] and [@!RFC7644].
 * All SCIM operations SHALL be authenticated and authorized via OAuth 2.0 as specified in (#authn-authz).
 * Local modifications to Users or Groups in the Application are prohibited.
+* The Application SHALL enforce rate limits on all SCIM endpoints and must respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.
+* The Identity Service SHALL use the HTTP PATCH method to update resources and SHALL NOT use the HTTP PUT method.
 
-### User Provisioning Operations
+### User Provisioning
 
-The Application MUST provide support all User provisioning operations defined in this section.
+Requirements for user provisioning operations are defined in this section.
+
+#### Schema
+
+The Application MUST include the following attributes in the User schema:
+
+* userName
+* displayName
+* active
+
+Additionally, the "externalId" attribute defined as optional in the "common" resource schema in [@!RFC7643] MUST be supported by the Application.
+
+#### Passwords and other credentials
+
+The Application MUST NOT support the "password" attribute.
+
+The Identity Service MUST NOT include the "password" attribute in any SCIM requests.
+
+A user resource may have various credentials or similar data associated with them. This includes passwords, password hashes, private keys, and multi-factor authentication data such as Time-Based One-Time Password (TOTP) seeds. The Application MUST NOT define attributes containing credentials in custom schemas. The Identity Service MUST NOT send values for user credentials in any SCIM requests.
+
+> **DZ note** Set the credential-related requirements as aggressively restrictive for now, can define any exceptions or other rules later after discussion.
 
 #### Create User (POST /Users)
 
-User creation is performed by the SCIM operation POST /Users.
-
-In addition to the user attributes required by [@!RFC7643], the following attributes are required to be part of the User schema:
-
-> **Editor's Note:** Should specify exact attribute names (e.g., "email" vs "emails") rather than keeping this vague.
-
-* An attribute which contains a unique identifier used by the enterprise to distinguish the owner of the account, such as "externalId."
-* An attribute which contains the primary email address of the user, such as "email"
+The Identity Service and the Application MUST support user creation via POST /Users.
 
 #### Update User (PATCH /Users/{id})
 
-User updates are performed by the SCIM operation PATCH /Users/{id}
+The Identity Service and the Application MUST support updating a user's attribute values via the SCIM operation PATCH /Users/{id}.
 
 #### Deactivate or Reactivate User (PATCH /Users/{id})
 
@@ -146,7 +170,7 @@ Changes to the user activation status, such deactivation and reactivation, are p
 
 The Identity Service SHOULD propagate user deactivation events to the Application within 5 minutes of the user being deactivated.
 
-The Application SHOULD respond to user deactivation events by revoking the ability for the user to continue accessing the Application, including the revocation of currently active sessions. The revocation mechanism outside the scope of this profile. Revocation SHOULD occur within 5 minutes of receiving the deactivation request.
+The Application SHOULD respond to user deactivation events by revoking the ability for the user to continue accessing the Application, including the revocation of currently active sessions. Session revocation mechanisms are outside the scope of this profile. Revocation SHOULD occur within 5 minutes of receiving the deactivation request.
 
 When a user account is deactivated, all access mechanisms and authorizations associated with that account MUST also be deactivated. This includes, but is not limited to:
 
@@ -161,7 +185,7 @@ The Application MUST allow reactivation of a deactivated user.
 
 #### Delete User (DELETE /Users/{id})
 
-User deletions are performed by the SCIM operation DELETE /Users/{id}
+Applications MAY allow users to be deleted via the SCIM operation DELETE /Users/{id}.
 
 After a user is deleted, the Application MUST allow the creation of a new user with the same username.
 
@@ -169,81 +193,82 @@ After a user is deleted, the Application MUST allow the creation of a new user w
 
 #### Get All Users (GET /Users)
 
-Get all users in the system is performed by the SCIM operation GET /Users
+The Application MUST support retrieval of all users via the SCIM operation GET /Users.
 
-This endpoint ensures that all users are managed by the Identity Service.
-
-To ensure that large amounts of data can be read from the Application, the application must support with index-based or cursor-based pagination for the GET /Users request. To ensure system stability and prevent abuse, the Application SHALL enforce rate limits on this endpoint and must respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.
+The Application MUST support at least one pagination method and SHOULD avoid returning more than 1,000 users per page. Support for cursor-based pagination by the Application is RECOMMENDED.
 
 #### Get User By ID (GET /Users/{id})
 
-User searches by id are performed by the SCIM operation GET /Users/{id}
+The Application MUST support retrieving a single user by ID via the SCIM operation GET /Users/{id}.
 
 #### List Users By Alternate Identifier (GET /Users?)
 
-User searches by alternate identifier are performed via the SCIM operation: GET /Users?filter={filterExpression}
+The Application MUST support the SCIM "filter" query parameter, performed via the SCIM operation: GET /Users?filter={filterExpression}
 
 Application Providers MUST support the following filter expressions:
 
 * username eq \{username\}
 * externalId eq \{externalId\}
 * emails[value eq \{email\}]
+* emails[type eq "work" and value eq \{email\}]
 
-### Group (Role) Provisioning Operations
+### Group Provisioning Operations
 
-The Application MUST provide support all Group provisioning operations defined in this section.
+Requirements for group provisioning operations are defined in this section. The Application MAY implement support for groups and MUST follow the below requirements if it does.
 
-**Note**: Within the IPSIE standard, Application permissions are referred to as "Roles." Within SCIM, Application permissions are referred to as "Groups." The term "Role" in IPSIE is functionally equivalent to the term "Group" in SCIM.
+#### Schema
+
+The Application MUST include the following attributes in the Group schema:
+
+* displayName
+* members
+
+Additionally, the "externalId" attribute defined as optional in the "common" resource schema in [@!RFC7643] MUST be supported by the Application.
+
+The Application SHOULD NOT allow multiple groups to have the same value for the "displayName" attribute".
+
+The Identity Service SHOULD use a unique value for the "displayName" attribute.
 
 #### Create Group (POST /Groups)
 
-Group creation is performed by the SCIM operation POST /Group.
+The Identity Service and the Application MUST support group creation via POST /Groups.
 
-> **Editor's Note:** This section needs additional details about required Group attributes and schema requirements.
+The Application MUST allow groups to be created with zero members.
 
 #### Get All Groups (GET /Groups)
 
-A search for all groups in the system is performed by the SCIM operation GET /Groups
+The Application MUST support retrieval of all groups via the SCIM operation GET /Groups.
 
-This endpoint ensures that all groups are managed by the Identity Service.
+The Application MUST support the attributes= and excludedAttributes= parameters.
 
-To ensure that large amounts of data can be read from the Application, the application MUST support with index-based or cursor-based pagination for the GET /Groups request. To ensure system stability and prevent abuse, the Application SHALL enforce rate limits on this endpoint and MUST respond with appropriate headers, such as "429 Too Many Requests" and "Retry-After," when limits are exceeded.
+The Identity Service SHOULD include excludedAttributes=members in the HTTP URI when listing all groups.
 
 #### Get Group By ID (GET /Group/{id})
 
-Group searches by id are performed by the SCIM operation GET /Group/{id}?excludedAttributes=members
+The Application MUST support retrieving a single group by ID via the SCIM operation GET /Groups/{id}.
 
 #### List Groups By Alternate Identifier (GET /Groups?)
 
-User lookups by alternate identifier are performed by the SCIM operation GET /Groups?filter={filterExpression}&excludedAttributes=members
+The Application MUST support the SCIM "filter" query parameter, performed via the SCIM operation: GET /Groups?filter={filterExpression}
 
-Application Providers MUST support the following filter expressions: TBD
+The Application MUST support the following filter expressions for groups:
 
-#### Add or Remove Group Members (PATCH /Group/{id})
+* displayName eq \{displayName\}
+* externalId eq \{externalId\}
 
-Members are added or removed from Groups via the SCIM operation PATCH /Groups/{id}
+#### Update Group (PATCH /Group/{id})
 
-For each Operation in the PATCH:
+The Identity Service and the Application MUST support updating a group's attribute values via the SCIM operation PATCH /Groups/{id}.
 
-The op attribute MUST contain either "add" or "remove".
+The Application MUST support the inclusion of at least 50 add or remove operations on the "members" attribute in a single PATCH request.
 
-* When the op is "add":
-  * The path attribute MUST be "members".
-  * The value attribute MUST be an array of Group member elements, as defined in Section 4.2 of the SCIM Core Schema [@!RFC7643]. Each member MUST contain a value subattribute with the id of the resource being added to the group.
-
-* When the op is "remove":
-  * The path attribute MUST be either:
-    * "members" (to remove all members)
-    * "members[value eq \{id\}]" (to remove a single member)
-  * The value attribute MUST be unspecified.
+The Identity Service SHOULD compile multiple changes to the "members" attribute into a single PATCH request.
 
 ## Metadata Endpoints
 
 ### ResourceTypes
 
 Application MUST host a /ResourceTypes endpoint, as defined in Section 4 of [@!RFC7644].
-
-The supported ResourceTypes MUST include Users and Groups.
 
 ### ServiceProviderConfig
 
@@ -253,18 +278,18 @@ The operations MUST include, at minimum, the set of SCIM capabilities required f
 
 ### Schemas
 
-Application Providers MUST host a /Schemas endpoint to describe the supported schemas, as defined in Section 4 of [@!RFC7644]. There must be a schema for both Users and Groups. The schemas must include all required attributes from RFC 7643 and from Section 3.2.3 (Create User).
+Application Providers MUST host a /Schemas endpoint to describe the supported schemas, as defined in Section 4 of [@!RFC7644]. There must be a schema for each implemented resource type. Schemas returned by the Application MUST include all implemented attributes and MUST NOT include attributes that are not implemented.
 
 # Security Considerations
 
 For SCIM security considerations, see [@!RFC7643] and [@!RFC7644]
 
-Additionally, the following requierements are included to address security considerations.
+Additionally, the following requirements are included to address security considerations.
 
 * **Transport Security**: All endpoints SHALL enforce TLS 1.2 or later with strong cipher suites and certificate validation.
 * **Error Handling**: Error responses SHALL use the SCIM error format and SHALL NOT leak internal details.
 * **Replay Resistance**: Access tokens SHALL expire and nonces SHALL be validated to prevent replay.
-* **Auditing**: All provisioning actions and responses SHALL be logged for audit and troubleshooting.
+* **Auditing**: All SCIM requests resulting in the creation, deletion, or modification of a SCIM resource SHALL be logged for audit and troubleshooting.
 * **Rate Limiting**: All endpoints SHALL enforce rate limiting and must respond with "429 Too Many Requests" when limits are exceeded.
 
 # IANA Considerations
@@ -280,7 +305,7 @@ Implementation of all mandatory requirements in this profile will result in a SC
   * SHALL adhere to the security considerations above.
 
 * **Application (SCIM service provider)**
-  * SHALL host all SCIM endpoints with full support for User and Group provisioning.
+  * SHALL host all SCIM endpoints with full support for User provisioning, and if supported, Group provisioning.
   * SHALL prevent local modifications outside of SCIM.
   * SHALL enforce OAuth 2.0 JWT Profile for Authentication [@!RFC7523].
   * SHALL adhere to the security considerations above.
