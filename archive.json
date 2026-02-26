@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-02-22T02:51:45.578302+00:00",
+  "timestamp": "2026-02-26T02:45:00.608092+00:00",
   "repo": "jischr/scim-ipsie-profiles",
   "labels": [
     {
@@ -57,14 +57,22 @@
       "url": "https://github.com/jischr/scim-ipsie-profiles/issues/3",
       "state": "OPEN",
       "author": "Zollnerd",
-      "authorAssociation": "NONE",
+      "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "https://github.com/jischr/scim-ipsie-profiles/blob/c289a468cd17d84b1878d9c33494e8c58e1559cb/draft-schreiber-ipsie-scim-al1-profile.md#L112\n\nOAuth doesn't define scope names, which leads to a few thoughts:\n\n1. Should this requirement be changed to say something to the effect of \"must contain scopes that don't grant permission for actions outside of the SCIM service provider\"? \n\n2. As part of SCIM-related work in IPSIE, should we try to define specific scopes or a framework for designing scopes that would scale beyond users and groups?\n\n3. \"scim\" is still pretty broad, versus something like scim.groups.read or scim.users.readwrite - definitely feels more granular than a lot of implementations have today, but if we've got a chance to raise the bar, this sort of approach might be worth including.    ",
       "createdAt": "2026-02-09T18:15:26Z",
-      "updatedAt": "2026-02-09T18:20:19Z",
+      "updatedAt": "2026-02-24T17:33:37Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "jischr",
+          "authorAssociation": "OWNER",
+          "body": "https://github.com/openid/sharedsignals/issues/299",
+          "createdAt": "2026-02-24T17:33:37Z",
+          "updatedAt": "2026-02-24T17:33:37Z"
+        }
+      ]
     },
     {
       "number": 4,
